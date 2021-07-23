@@ -1,0 +1,31 @@
+
+Table of Contents
+
+  Section 1 .................... Overview
+  Section 2 .................... Documentation
+  Section 3 .................... License
+  Section 4 .................... References
+
+1 Overview
+
+  KArgParse is a korified extension of Python's argparse module,
+  which was originally developed by Steven J. Bethard. Version 1.1
+  of the argparse module, as shipped with Python 3.6.X, represents
+  the approximate branch point for the code in this project.
+
+2 Documentation
+
+  See README.INSTALL for requirements and instructions on how to
+  build, test, and install this software.
+
+3 License
+
+  The terms and conditions under which this software is released are
+  set forth in README.LICENSE.
+
+4 References
+
+  The argparse module is documented here:
+
+    https://docs.python.org/3/library/argparse.html
+

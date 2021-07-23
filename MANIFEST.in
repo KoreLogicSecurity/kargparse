@@ -1,0 +1,10 @@
+exclude *
+include Makefile
+include README
+include README.CREDITS
+include README.INSTALL
+include README.LICENSE
+include kargparse/*.py
+include setup.py
+include tests/Makefile
+include tests/unit/*.py

@@ -1,0 +1,59 @@
+
+########################################################################
+#
+# Status Codes
+#
+#   c - canceled -- treat item as though it was removed from the list
+#   d - done -- item is finished
+#   o - open -- someone is actively working on the item
+#   * - required -- item is required, but is currently unassigned
+#   ? - questionable -- item is being considered, but isn't official yet
+#
+########################################################################
+#
+# When adding new TODO items, put them at the top of the list. Also, do
+# not remove jobs from the list without a good reason. Rather, just tag
+# them as done ('d') or canceled ('c'). Periodically, the team leader
+# will go through and weed out items that are done or no longer needed.
+#
+########################################################################
+
+
+* - Update the kargparse_howto file. Add README.HOWTO.
+
+* - Write unit tests for formatter.py.
+
+* - Extend 'nargs' to support more expressions. An example of this would
+    be N+ where N is a integer. I think _get_nargs_pattern() is the place
+    to start with this. I've messed with this a little bit and I was able
+    to add an expression that worked. This function can be overridden in
+    the KArgumentParser class. Note that _format_action_input(), which is
+    part of the KHelpFormatter class, would also have to be extended.
+
+* - Extend 'type' to support more restrictions. The functions that
+    can be passed to 'type' are only vetted based on the name of the
+    function. Possibly add a restriction to control the return type as
+    well. Depending on what's wanted, the name of the function may not
+    matter, just the return type. The structure for this is already set up,
+    there is an allowed_types dictionary and modifying functions. The vetting
+    is done in add_argument(), which is part of the KArgumentParser class.
+
+* - Extend 'choices' to support function calls with keyword
+    arguments. Choices can only support one positional argument, but
+    there could be keyword arguments with defaults. However, arguments
+    still can't be passed to the function because the function needs to
+    remain unevaluated. This all happens in _check_value(), which is
+    part of the KArgumentParser class.
+
+? - Extend the 'add_version' option to possibly use a custom version class
+    or automatically try and find the version.
+
+? - Possibly create a custom types class that could be used for 'type'.
+    An example of this would be like parser.add_argument(...type=TYPE.range).
+
+? - Possibly create a custom choices class that could be used for 'choices'.
+    An example of this would be like parser.add_argument(...choices=CHOICES.x509_fields).
+
+? - Possibly create custom actions to use for common use cases.
+    An example of this would be like parser.add_argument(...action='log').
+

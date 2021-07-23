@@ -1,0 +1,33 @@
+
+Table of Contents
+
+  Section 1 .................... Credits
+  Section 2 .................... Sponsors
+  Section 3 .................... Maintainers
+
+1 Credits
+
+  KArgParse is a korified extension of Python's argparse module,
+  which was originally developed by Steven J. Bethard.
+
+  Thanks to all those who have contributed to this project. Any
+  contribution that moves the project forward is appreciated. Those
+  who have made noteworthy contributions are listed below in
+  alphabetical order.
+
+    Monroe, Klayton
+    Monroe, Luke
+
+2 Sponsors
+
+  Thanks to our sponsors listed below in chronological order.
+
+    KoreLogic (2020-present)
+
+3 Maintainers
+
+  Thanks to our maintainers listed below in alphabetical order.
+
+    Monroe, Klayton (2020-present)
+    Monroe, Luke (2020-present)
+

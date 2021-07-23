@@ -1,0 +1,314 @@
+
+Table of Contents
+
+  Section 1 .................... Quick Start Guide
+  Section 2 .................... Example Use Cases
+  Section 2.1 .................. Example Use Case 1
+  Section 2.2 .................. Example Use Case 2
+  Section 2.3 .................. Example Use Case 3
+
+1 Quick Start Guide
+
+  To use KArgParse, you should be familiar with Python's argparse
+  module, which is documented here:
+
+    https://docs.python.org/3/library/argparse.html
+
+  If you already have a script that uses Python's argparse module,
+  you can upgrade that script just by changing the import statement
+  as shown here:
+
+    # Original import statement.
+    from argparse import ArgumentParser
+
+    # Modified import statement.
+    from kargparse.parser import KArgumentParser as ArgumentParser
+
+  The remainder of this document contains several examples that you can
+  use as templates to get a new script up and running quickly.
+
+2 Example Use Cases
+
+  The examples provided below are intended to help you get started
+  quickly, but they only cover basic use cases.
+
+2.1 Example Use Case 1
+
+  The script below requires the user to supply three positional
+  string arguments.
+
+--- example1-3pos.py ---
+#!/usr/bin/env python3
+
+from kargparse.parser import KArgumentParser as ArgumentParser
+
+def main():
+    description = """
+                  A simple KArgParse example that requires three positional arguments
+                  and provides one built-in option (-h|--help).
+                  """
+    parser = ArgumentParser(description=description)
+    parser.add_argument('arg1', type=str, help='This is the 1st positional argument, and its purpose is ...')
+    parser.add_argument('arg2', type=str, help='This is the 2nd positional argument, and its purpose is ...')
+    parser.add_argument('arg3', type=str, help='This is the 3rd positional argument, and its purpose is ...')
+    args = parser.parse_args()
+    print(args)
+    print("Use 'args.arg1' to retrieve 1st positional argument value: {}".format(args.arg1))
+    print("Use 'args.arg2' to retrieve 2nd positional argument value: {}".format(args.arg2))
+    print("Use 'args.arg3' to retrieve 3rd positional argument value: {}".format(args.arg3))
+
+if __name__ == '__main__':
+    main()
+
+--- example1-3pos.py ---
+
+  To try out this example, run the following commands on a Linux
+  platform running Python 3.6 or higher:
+
+    $ sed '1,/--- example1-3pos.py ---/d; /--- example1-3pos.py ---/,$d;' README.HOWTO > example1-3pos.py
+    $ chmod u+x example1-3pos.py
+    $ ./example1-3pos.py
+    <you should see a usage error that required arguments are missing>
+    $ echo $?
+    <you should see an exit code of 1, which indicates a usage error>
+
+    $ ./example1-3pos.py --help
+    <you should see full usage details>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+    $ ./example1-3pos.py foo
+    <you should see a usage error that required arguments are missing>
+    $ echo $?
+    <you should see an exit code of 1, which indicates a usage error>
+
+    $ ./example1-3pos.py foo bar
+    <you should see a usage error that required arguments are missing>
+    $ echo $?
+    <you should see an exit code of 1, which indicates a usage error>
+
+    $ ./example1-3pos.py foo bar com
+    <you should see the argument namespace and the value assigned to each argument>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+2.2 Example Use Case 2
+
+  The script below only requires the user to supply one positional
+  string argument, but it has provisions for two options that are
+  choice-constrained integers.
+
+--- example2-1pos-2opt.py ---
+#!/usr/bin/env python3
+
+from kargparse.parser import KArgumentParser as ArgumentParser
+
+def main():
+    description = """
+                  A simple KArgParse example that requires one positional argument,
+                  provides one built-in option (-h|--help), and supports two
+                  choice-constrained options.
+                  """
+    parser = ArgumentParser(description=description)
+    parser.add_argument('arg1', type=str, help='This is the only positional argument, and its purpose is ...')
+    parser.add_argument('-M', '--max',
+                        choices=[1,2,3,4,5],
+                        default=5,
+                        dest='opt1', # Used store value in args.opt1 rather than args.max.
+                        help="""
+                             Set the maximum level for the operation to be executed. Valid
+                             choices include: %(choices)s. The default value is '%(default)s'.
+                             """,
+                        type=int)
+    parser.add_argument('-m', '--min',
+                        choices=[0,1,2,3,4],
+                        default=0,
+                        dest='opt2', # Used store value in args.opt2 rather than args.min.
+                        help="""
+                             Set the minimum level for the operation to be executed. Valid
+                             choices include: %(choices)s. The default value is '%(default)s'.
+                             """,
+                        type=int)
+    args = parser.parse_args()
+    print(args)
+    print("Use 'args.arg1' to retrieve 1st (and only) positional argument value: {}".format(args.arg1))
+    print("Use 'args.opt1' to retrieve 1st option value: {}".format(args.opt1))
+    print("Use 'args.opt2' to retrieve 2nd option value: {}".format(args.opt2))
+
+if __name__ == '__main__':
+    main()
+
+--- example2-1pos-2opt.py ---
+
+  To try out this example, run the following commands on a Linux
+  platform running Python 3.6 or higher:
+
+    $ sed '1,/--- example2-1pos-2opt.py ---/d; /--- example2-1pos-2opt.py ---/,$d;' README.HOWTO > example2-1pos-2opt.py
+    $ chmod u+x example2-1pos-2opt.py
+    $ ./example2-1pos-2opt.py
+    <you should see a usage error that required arguments are missing>
+    $ echo $?
+    <you should see an exit code of 1, which indicates a usage error>
+
+    $ ./example2-1pos-2opt.py --help
+    <you should see full usage details>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+    $ ./example2-1pos-2opt.py foo
+    <you should see the argument namespace and the value assigned to each argument>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+    $ ./example2-1pos-2opt.py foo --min bar
+    <you should see a usage error and diagnostic indicating an invalid value was supplied>
+    $ echo $?
+    <you should see an exit code of 2, which indicates an argument error>
+
+    $ ./example2-1pos-2opt.py foo --min 5
+    <you should see a usage error and diagnostic indicating an invalid choice was supplied>
+    $ echo $?
+    <you should see an exit code of 2, which indicates an argument error>
+
+    $ ./example2-1pos-2opt.py foo --min 1
+    <you should see the argument namespace and the value assigned to each argument>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+    $ ./example2-1pos-2opt.py foo --min 1 --max 4
+    <you should see the argument namespace and the value assigned to each argument>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+2.3 Example Use Case 3
+
+  The script below supports three distinct modes of operation. Each
+  mode requires one positional argument and has provisions for one
+  common option and one mode-specific option.
+
+--- example3-3mode-1pos-2opt.py ---
+#!/usr/bin/env python3
+
+from kargparse.parser import KArgumentParser as ArgumentParser
+
+def main():
+    description = """
+                  A simple KArgParse example that supports three modes of operation.
+                  Each mode requires one positional argument and has provisions for
+                  one common option and one mode-specific option. The '--min' option
+                  is shared by modes 1 and 2, and the '--max' option is shared by
+                  modes 2 and 3.
+                  """
+    parser = ArgumentParser(description=description)
+    subparsers = parser.add_subparsers(dest='mode', help='Modes of Operation.')
+    subparsers.required = True
+
+    parent1 = ArgumentParser(add_help=False)
+    parent1.add_argument('-m', '--min',
+                         choices=[0,1,2,3,4],
+                         default=0,
+                         help="""
+                              Set the minimum level for the operation to be executed. Valid
+                              choices include: %(choices)s. The default value is '%(default)s'.
+                              """,
+                         type=int)
+
+    parent2 = ArgumentParser(add_help=False)
+    parent2.add_argument('-M', '--max',
+                         choices=[1,2,3,4,5],
+                         default=5,
+                         help="""
+                              Set the maximum level for the operation to be executed. Valid
+                              choices include: %(choices)s. The default value is '%(default)s'.
+                              """,
+                         type=int)
+
+    subparser1 = subparsers.add_parser('mode1', parents=[parent1], help='This is the 1st mode, and its purpose is ...')
+    subparser1.add_argument('mode1_arg1', type=str, help='This is the only positional argument for mode 1, and its purpose is ...')
+    subparser1.add_argument('-f', '--file', help='Specify an optional file from which supplemental data can be ...')
+
+    subparser2 = subparsers.add_parser('mode2', parents=[parent1], help='This is the 2nd mode, and its purpose is ...')
+    subparser2.add_argument('mode2_arg1', type=str, help='This is the only positional argument for mode 2, and its purpose is ...')
+    subparser2.add_argument('-l', '--language',
+                            choices=['english','french','italian','spanish'],
+                            default='english',
+                            help="""
+                                 Set the language to be used. Valid choices include: %(choices)s. The
+                                 default value is '%(default)s'.
+                                 """,
+                            type=str)
+
+    subparser3 = subparsers.add_parser('mode3', parents=[parent1,parent2], help='This is the 3rd mode, and its purpose is ...')
+    subparser3.add_argument('mode3_arg1', type=str, help='This is the only positional argument for mode 3, and its purpose is ...')
+
+    args = parser.parse_args()
+    print(args)
+    print("Use 'args.mode' to retrieve the chosen subparser: {}".format(args.mode))
+    if args.mode == "mode1":
+        print("Use 'args.mode1_arg1' to retrieve the 1st mode's only positional argument value: {}".format(args.mode1_arg1))
+        print("Use 'args.file' to retrieve the 1st mode's 1st option value: {}".format(args.file))
+        print("Use 'args.min' to retrieve the 1st mode's 2nd option value: {}".format(args.min))
+    elif args.mode == "mode2":
+        print("Use 'args.mode2_arg1' to retrieve the 2nd mode's only positional argument value: {}".format(args.mode2_arg1))
+        print("Use 'args.language' to retrieve the 2nd mode's 1st option value: {}".format(args.language))
+        print("Use 'args.min' to retrieve the 2nd mode's 2nd option value: {}".format(args.min))
+    else:
+        print("Use 'args.mode3_arg1' to retrieve the 3rd mode's only positional argument value: {}".format(args.mode3_arg1))
+        print("Use 'args.max' to retrieve the 3rd mode's 1st option value: {}".format(args.max))
+        print("Use 'args.min' to retrieve the 3rd mode's 2nd option value: {}".format(args.min))
+
+if __name__ == '__main__':
+    main()
+
+--- example3-3mode-1pos-2opt.py ---
+
+  To try out this example, run the following commands on a Linux
+  platform running Python 3.6 or higher:
+
+    $ sed '1,/--- example3-3mode-1pos-2opt.py ---/d; /--- example3-3mode-1pos-2opt.py ---/,$d;' README.HOWTO > example3-3mode-1pos-2opt.py
+    $ chmod u+x example3-3mode-1pos-2opt.py
+    $ ./example3-3mode-1pos-2opt.py
+    <you should see a usage error that a required mode argument is missing>
+    $ echo $?
+    <you should see an exit code of 1, which indicates a usage error>
+
+    $ ./example3-3mode-1pos-2opt.py --help
+    <you should see full usage details>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+    $ ./example3-3mode-1pos-2opt.py mode1
+    <you should see a usage error that required arguments are missing>
+    $ echo $?
+    <you should see an exit code of 1, which indicates a usage error>
+
+    $ ./example3-3mode-1pos-2opt.py mode1 --help
+    <you should see full usage details>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+    $ ./example3-3mode-1pos-2opt.py mode1 --min foo
+    <you should see a usage error and diagnostic indicating an invalid value was supplied>
+    $ echo $?
+    <you should see an exit code of 2, which indicates an argument error>
+
+    $ ./example3-3mode-1pos-2opt.py mode1 --min 1 foo
+    <you should see the argument namespace and the value assigned to each argument>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+    $ ./example3-3mode-1pos-2opt.py mode2 --min 1 --language latin foo
+    <you should see a usage error and diagnostic indicating an invalid choice was supplied>
+    $ echo $?
+    <you should see an exit code of 2, which indicates an argument error>
+
+    $ ./example3-3mode-1pos-2opt.py mode2 --min 1 --language italian foo
+    <you should see the argument namespace and the value assigned to each argument>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
+    $ ./example3-3mode-1pos-2opt.py mode3 --min 1 --max 4 foo
+    <you should see the argument namespace and the value assigned to each argument>
+    $ echo $?
+    <you should see an exit code of 0, which indicates success>
+
